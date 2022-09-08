@@ -1,0 +1,44 @@
+<html>
+<script>
+
+    const channel = new MessageChannel();
+    var nativeJsPortOne = channel.port1;
+    var nativeJsPortTwo = channel.port2;
+    window.addEventListener('message', function(event) {
+        if (event.data != 'capturePort') {
+            nativeJsPortOne.postMessage(event.data)
+        } else if (event.data == 'capturePort') {
+
+            /* The following three lines form Android class 'WebViewCallBackDemo' capture the port and assign it to nativeJsPortTwo
+            var destPort = arrayOf(nativeToJsPorts[1])
+            nativeToJsPorts[0].setWebMessageCallback(nativeToJs!!)
+            WebViewCompat.postWebMessage(webView, WebMessageCompat("capturePort", destPort), Uri.EMPTY) */
+
+            if (event.ports[0] != null) {
+                nativeJsPortTwo = event.ports[0]
+            }
+        }
+    }, false);
+
+    nativeJsPortOne.addEventListener('message', function(event) {
+    }, false);
+
+    nativeJsPortTwo.addEventListener('message', function(event) {
+    }, false);
+        //console.log("NP2: " + event.data);
+    nativeJsPortOne.start();
+    nativeJsPortTwo.start();
+
+var count = 0;
+
+</script>
+<body>
+This is an ASSET
+
+<div style="font-size: 24pt; text-align: center;">
+    <input type="button" value="Test" onclick="nativeJsPortTwo.postMessage(count++ + ': ' + msgFromJS.value);" style="font-size: inherit;" /><br />
+    <input id="msgFromJS" type="text" value="JavaScript To Native" style="font-size: 16pt; text-align: inherit; width: 80%;" />
+</div>
+
+</body>
+</html>
