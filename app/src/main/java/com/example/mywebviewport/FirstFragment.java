@@ -33,6 +33,8 @@ public class FirstFragment extends Fragment {
     private WebMessagePort port;
     private WebView wv;
 
+    private WebMessagePort portToReference;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -57,6 +59,8 @@ public class FirstFragment extends Fragment {
 
                 WebMessagePort[] destPort = new WebMessagePort[]{nativeToJSPorts[1]};
 
+                // Keep a reference to MessagePort, workaround for the webview bug.
+                portToReference = nativeToJSPorts[0];
                 nativeToJSPorts[0].setWebMessageCallback(nativeToJs);
 
                 wv.postWebMessage(new WebMessage("capturePort", destPort), Uri.parse("https://0.0.0.0/"));
